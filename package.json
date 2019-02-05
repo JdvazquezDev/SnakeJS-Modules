@@ -1,0 +1,31 @@
+{
+  "name": "snakejs-modules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "snake.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-serve",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JdvazquezDev/SnakeJS-Modules.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JdvazquezDev/SnakeJS-Modules/issues"
+  },
+  "homepage": "https://github.com/JdvazquezDev/SnakeJS-Modules#readme",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.29.1",
+    "webpack-cli": "^3.2.3",
+    "webpack-serve": "^2.0.3"
+  }
+}
