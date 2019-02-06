@@ -1,13 +1,13 @@
-console.log("Starting Game...")
+import Square from './Square.js'
+
+console.log('Starting Game...');
+
 const myCanvas = document.getElementById('myCanvas');
 const context = myCanvas.getContext('2d');
 
 const SIZE = 20;
 
-const head = {
-    x: 0,
-    y: 0
-};
+const head = new Square(0, 0);
 const body = [];
 
 let food = null; // x: y:
@@ -52,8 +52,8 @@ function update() {
     }
 
     // Update coordinates of the snake's head
-    head.x += dx;
-    head.y += dy;
+    head.move(dx, dy);
+
     if (dx !== 0) {
         lastAxis = 'X'
     } else if (dy !== 0) {
@@ -61,7 +61,7 @@ function update() {
     }
 
     // Detect if snake has eaten food
-    if (food && head.x === food.x && head.y === food.y) {
+    if (food && head.checkCollision(food)) {
         food = null;
         // Increase the size of the snake
         increaseSnakeSize(prevX, prevY);
@@ -85,6 +85,21 @@ function randomFoodPosition() {
     return position;
 }
 
+function checkFoodCollision(position) {
+    // Check if coordinates of food are the same as other elem of snake's body
+    for (let i = 0; i < body.length; i++) {
+        if (body[i].checkCollision(position)) {
+            return true;
+        }
+    }
+    // Check if coordinates of food are the same as snake's head
+    if (head.checkCollision(position)) {
+        return true;
+    }
+
+    return false;
+}
+
 function checkSnakeCollision() {
     // Check if coordinates of head are the same as other elem of snake's body
     for (let i = 0; i < body.length; i++) {
@@ -106,21 +121,6 @@ function checkSnakeCollision() {
     return false;
 }
 
-function checkFoodCollision(position) {
-    // Check if coordinates of food are the same as other elem of snake's body
-    for (let i = 0; i < body.length; i++) {
-        if (position.x === body[i].x && position.y === body[i].y) {
-            return true;
-        }
-    }
-    // Check if coordinates of food are the same as snake's head
-    if (position.x === head.x && position.y === head.y) {
-        return true;
-    }
-
-    return false;
-}
-
 function gameOver() {
     alert('GAME OVER!');
     head.x = 0;
@@ -131,10 +131,9 @@ function gameOver() {
 }
 
 function increaseSnakeSize(prevX, prevY) {
-    body.push({
-        x: prevX,
-        y: prevY
-    });
+    body.push(
+        new Square(prevX, prevY)
+    );
 }
 
 function getRandomX() {
