@@ -27,7 +27,7 @@ export default class{
 
     drawObject(obj, color) {
         this.context.fillStyle = color;
-        this.context.fillRect(obj.x, obj.y, this.snake.SIZE, this.snake.SIZE);
+        this.context.fillRect(obj.x, obj.y, this.SIZE, this.SIZE);
     }
 
 }
