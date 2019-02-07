@@ -5,8 +5,8 @@ export default class {
         this.head = new Square(0, 0);
         this.body = [];
     }
-
-    addElement(element) {
+    
+    addElement(element){
         this.body.push(element);
     }
 
