@@ -1,11 +1,11 @@
 import Square from './Square.js'
 import Snake from './Snake.js'
-import CanvasHandler from './CanvasHandler.js';
 
 export default class {
 
-    constructor(standardSize = 20) {
-        this.myCanvas = new CanvasHandler('myCanvas');
+    constructor(idCanvasElement, standardSize = 20) {
+        this.myCanvas = document.getElementById(idCanvasElement);
+        this.context = myCanvas.getContext('2d');
 
         this.SIZE = standardSize;
 
@@ -17,7 +17,7 @@ export default class {
         this.lastAxis; // 'Y' 'X'
 
         // 'keypress' don't activate arrows keys
-        document.addEventListener('keydown', this.moveSnake);
+        document.addEventListener('keydown', this.moveSnake.bind(this));
     }
 
     update() {
@@ -53,6 +53,16 @@ export default class {
         this.generateFoodIfNeeded();
     }
 
+    generateFoodIfNeeded() {
+        if (this.food)
+            return;
+        do {
+            this.food = new Square(this.getRandomX(), this.getRandomY());
+        }
+        while (this.snake.checkFullCollision(this.food));
+
+    }
+
     snakeHasCollided() {
         // Check if coordinates of head are the same as other elem of snake's snake.body
         if (this.snake.hasCollided())
@@ -68,20 +78,11 @@ export default class {
     gameOver() {
         console.log('GAME OVER!');
         alert('GAME OVER!');
-        dx = 0;
-        dy = 0;
+        this.dx = 0;
+        this.dy = 0;
         this.snake.reset();
     }
 
-    generateFoodIfNeeded() {
-        if (this.food)
-            return;
-        do {
-            this.food = new Square(this.getRandomX(), this.getRandomY());
-        }
-        while (this.snake.checkFullCollision(this.food));
-
-    }
 
     getRandomX() {
         // 0, 20, 40, ..., 380
@@ -97,7 +98,27 @@ export default class {
         return this.SIZE * parseInt(Math.random() * numSquaresY);
     }
 
+    draw() {
+        // Define black background
+        this.context.fillStyle = 'black';
+        this.context.fillRect(0, 0, this.myCanvas.width, this.myCanvas.height); // Clear this.context
 
+        // Head
+        this.drawObject(this.snake.head, 'lime');
+
+        // Body
+        this.snake.body.forEach(
+            elem => this.drawObject(elem, 'lime')
+        );
+
+        // Food
+        this.drawObject(this.food, 'white');
+    }
+
+    drawObject(obj, color) {
+        this.context.fillStyle = color;
+        this.context.fillRect(obj.x, obj.y, this.SIZE, this.SIZE);
+    }
 
     moveSnake(event) {
         // Conditions restrict movement on the same axis
@@ -105,27 +126,27 @@ export default class {
             case 'ArrowUp':
                 if (this.lastAxis !== 'Y') {
                     this.dx = 0;
-                    this.dy = -SIZE;
+                    this.dy = -this.SIZE;
                     console.log('Move up');
                 }
                 break;
             case 'ArrowDown':
                 if (this.lastAxis !== 'Y') {
                     this.dx = 0;
-                    this.dy = SIZE;
+                    this.dy = this.SIZE;
                     console.log('Move down');
                 }
                 break;
             case 'ArrowLeft':
                 if (this.lastAxis !== 'X') {
-                    this.dx = -SIZE;
+                    this.dx = -this.SIZE;
                     this.dy = 0;
                     console.log('Move left');
                 }
                 break;
             case 'ArrowRight':
                 if (this.lastAxis !== 'X') {
-                    this.dx = SIZE;
+                    this.dx = this.SIZE;
                     this.dy = 0;
                     console.log('Move right');
                 }
